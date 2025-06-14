@@ -191,3 +191,31 @@ document.querySelector('.contact-form form').addEventListener('submit', function
     });
 });
 </script>
+
+document.addEventListener("DOMContentLoaded", function () {
+    var form = document.querySelector('.contact-form form');
+    if(form){
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var data = new FormData(form);
+            fetch(form.action, {
+                method: form.method,
+                body: data,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(function(response) {
+                if (response.ok) {
+                    form.reset();
+                    document.getElementById('form-message').style.display = 'block';
+                } else {
+                    response.json().then(function(data) {
+                        alert(data.error || "There was a problem submitting your form.");
+                    });
+                }
+            }).catch(function(error) {
+                alert("There was a problem submitting your form.");
+            });
+        });
+    }
+});
